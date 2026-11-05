@@ -166,8 +166,9 @@ footer.site a { color: oklch(94% 0.012 92); text-decoration: none; }
 footer.site a:hover { color: var(--color-accent); }
 
 /* ---------- виджет-сотрудник: отвечаем сразу, круглосуточно ------------------- */
-.agent { position: fixed; right: clamp(12px, 2vw, 28px); bottom: clamp(12px, 2.4vh, 28px); z-index: 60;
-  display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--color-ink); }
+.agent-wrap { position: fixed; right: clamp(12px, 2vw, 28px); bottom: clamp(12px, 2.4vh, 28px); z-index: 60; display: grid; justify-items: end; gap: 12px; }
+.agent { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--color-ink);
+  border: 0; background: none; padding: 0; font: inherit; cursor: pointer; }
 .agent__bubble { display: grid; gap: 2px; padding: 10px 16px; border-radius: 16px 16px 4px 16px;
   background: #fff; box-shadow: 0 10px 30px rgb(0 0 0 / .18), 0 0 0 1px rgb(0 0 0 / .05);
   font-family: var(--font-body); line-height: 1.25; max-width: 15rem;
@@ -194,6 +195,43 @@ footer.site a:hover { color: var(--color-accent); }
   .agent__photo b { display: block; }
 }
 @media (prefers-reduced-motion: reduce) { .agent__bubble { animation: none; opacity: 1; transform: none; } .agent__photo::before { animation: none; opacity: 0; } }
+
+/* ---------- окно чата ИИ-продавца ------------------------------------------ */
+.aichat { width: min(360px, calc(100vw - 24px)); border-radius: 16px; overflow: hidden;
+  background: #fff; box-shadow: 0 24px 60px rgb(0 0 0 / .28), 0 0 0 1px rgb(0 0 0 / .06);
+  display: flex; flex-direction: column;
+  transform-origin: bottom right; animation: chat-in .25s var(--ease-out); }
+.aichat[hidden] { display: none; }
+@keyframes chat-in { from { opacity: 0; transform: translateY(14px) scale(.96); } }
+.aichat__head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--color-steel); color: var(--color-paper); }
+.aichat__head img { border-radius: 50%; box-shadow: 0 0 0 2px var(--color-accent); }
+.aichat__who { display: grid; gap: 1px; min-width: 0; flex: 1; }
+.aichat__who b { font-size: .95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.aichat__who span { font-size: .78rem; color: oklch(84% 0.015 90); display: inline-flex; align-items: center; gap: 6px; }
+.aichat__who i { width: 8px; height: 8px; border-radius: 50%; background: #2fbf5b; display: inline-block; }
+.aichat__close { border: 0; background: none; color: oklch(84% 0.015 90); font-size: 1.5rem; line-height: 1; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.aichat__close:hover { color: #fff; background: oklch(100% 0 0 / .1); }
+.aichat__body { display: grid; gap: 8px; padding: 14px; background: var(--color-paper-2); max-height: 320px; overflow-y: auto; }
+.msg { max-width: 84%; padding: 9px 13px; border-radius: 14px; font-size: .88rem; line-height: 1.45;
+  opacity: 0; transform: translateY(8px); animation: msg-in .3s var(--ease-out) forwards; overflow-wrap: anywhere; }
+@keyframes msg-in { to { opacity: 1; transform: none; } }
+.msg--bot { justify-self: start; background: #fff; border: 1px solid var(--color-line); border-bottom-left-radius: 4px; }
+.msg--user { justify-self: end; background: var(--color-accent); color: var(--color-on-accent); border-bottom-right-radius: 4px; font-weight: 600; }
+.aichat__typing { justify-self: start; display: inline-flex; gap: 4px; padding: 12px 14px; background: #fff; border: 1px solid var(--color-line); border-radius: 14px; border-bottom-left-radius: 4px; margin: 0 14px 8px; width: max-content; }
+.aichat__typing[hidden] { display: none; }
+.aichat__typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--color-ink-soft); animation: typing 1.1s infinite; }
+.aichat__typing span:nth-child(2) { animation-delay: .18s; }
+.aichat__typing span:nth-child(3) { animation-delay: .36s; }
+@keyframes typing { 0%, 60%, 100% { transform: none; opacity: .4; } 30% { transform: translateY(-4px); opacity: 1; } }
+.aichat__input { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--color-line); background: #fff; align-items: center; }
+.aichat__input input { flex: 1; min-width: 0; border: 0; background: none; font: 500 .88rem/1.4 var(--font-body); color: var(--color-ink); padding: 6px 4px; }
+.aichat__input input:focus-visible { outline: none; }
+.aichat__input button { border: 0; background: var(--color-accent); color: var(--color-on-accent); width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; cursor: default; opacity: .75; }
+.aichat__note { margin: 0; padding: 8px 14px 10px; font-size: .72rem; color: var(--color-ink-soft); background: #fff; border-top: 1px dashed var(--color-line); }
+@media (max-width: 600px) {
+  .aichat { width: calc(100vw - 24px); }
+  .aichat__body { max-height: 40vh; }
+}
 
 /* ---------- адаптив ---------- */
 @media (max-width: 600px) {
@@ -394,13 +432,31 @@ footer.site a:hover { color: var(--color-accent); }
 </footer>
 
 <!-- agent-widget -->
-<a class="agent" href="#zayavka" aria-label="Написать нам: отвечаем сразу, круглосуточно">
-  <span class="agent__bubble"><b>Отвечаем сразу</b><span>круглосуточно, менеджер на связи</span></span>
-  <span class="agent__photo">
-    <img class="ph" src="assets/agent.webp" alt="" width="64" height="64" loading="lazy">
-    <i aria-hidden="true"></i><b aria-hidden="true">24/7</b>
-  </span>
-</a>
+<div class="agent-wrap">
+  <div class="aichat" id="aichat" role="dialog" aria-modal="false" aria-label="Пример диалога с ИИ-продавцом" hidden>
+    <div class="aichat__head">
+      <img src="assets/agent.webp" alt="" width="40" height="40">
+      <div class="aichat__who"><b>Менеджер завода · ИИ</b><span><i></i>онлайн, отвечу за секунды</span></div>
+      <button class="aichat__close" id="aichat-close" type="button" aria-label="Закрыть чат">×</button>
+    </div>
+    <div class="aichat__body" id="aichat-body"></div>
+    <div class="aichat__typing" id="aichat-typing" hidden><span></span><span></span><span></span></div>
+    <form class="aichat__input" id="aichat-form">
+      <input type="text" placeholder="Сообщение…" aria-label="Сообщение (демо)" disabled>
+      <button type="submit" aria-label="Отправить (демо)" tabindex="-1">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+      </button>
+    </form>
+    <p class="aichat__note">Демо: виджет подключён к CRM, диалог и заявка падают в воронку автоматически</p>
+  </div>
+  <button class="agent" id="agent-toggle" type="button" aria-label="Открыть чат с ИИ-продавцом: отвечаем сразу, круглосуточно" aria-expanded="false">
+    <span class="agent__bubble"><b>Отвечаем сразу</b><span>круглосуточно, менеджер на связи</span></span>
+    <span class="agent__photo">
+      <img class="ph" src="assets/agent.webp" alt="" width="64" height="64" loading="lazy">
+      <i aria-hidden="true"></i><b aria-hidden="true">24/7</b>
+    </span>
+  </button>
+</div>
 <!-- /agent-widget -->
 
 <script>
@@ -491,6 +547,74 @@ document.getElementById("zayavka-form").addEventListener("submit", e => {
 });
 
 document.getElementById("year").textContent = new Date().getFullYear();
+
+/* ---------- чат ИИ-продавца: пример диалога -------------------------------- */
+const DIALOGUE = [
+  { from: "bot",  text: "Здравствуйте! Помогу подобрать станок. Как могу к вам обращаться?" },
+  { from: "user", text: "Юрий" },
+  { from: "bot",  text: "Приятно познакомиться, Юрий! Какой станок рассматриваете?" },
+  { from: "user", text: "Сколько стоит станок?" },
+  { from: "bot",  text: "Токарные – от 185 000 ₽, фрезерные – от 410 000 ₽, с ЧПУ – от 1 450 000 ₽. Точная цена зависит от комплектации, пришлю расчёт под вашу задачу." },
+  { from: "user", text: "А гарантия есть?" },
+  { from: "bot",  text: "Да: 5 лет на станину, 12 месяцев на электрику. Своя сервисная бригада, выезд в регионы." },
+  { from: "user", text: "Доставка есть?" },
+  { from: "bot",  text: "Отгрузка со склада за 48 часов, в любой регион России. До терминала транспортной компании – бесплатно." },
+  { from: "user", text: "А скидка есть?" },
+  { from: "bot",  text: "В этом месяце у нас доставка бесплатная – это экономия 15–30 тыс. ₽. Плюс пусконаладка 0 ₽ при покупке." },
+  { from: "bot",  text: "Оставьте номер телефона – вышлю характеристики станка и варианты комплектации с ценами." },
+  { from: "user", text: "+7 921 000-00-00" },
+  { from: "bot",  text: "Готово, Юрий! В течение 15 минут пришлю характеристики на WhatsApp. Хорошего дня!" },
+];
+
+const aichat = document.getElementById("aichat");
+const aichatBody = document.getElementById("aichat-body");
+const aichatTyping = document.getElementById("aichat-typing");
+const agentToggle = document.getElementById("agent-toggle");
+let chatPlayed = false, chatTimers = [];
+
+function addMsg(m) {
+  const el = document.createElement("div");
+  el.className = "msg msg--" + m.from;
+  el.textContent = m.text;
+  aichatBody.appendChild(el);
+  aichatBody.scrollTop = aichatBody.scrollHeight;
+}
+
+function playDialogue() {
+  chatTimers.forEach(clearTimeout);
+  chatTimers = [];
+  aichatBody.innerHTML = "";
+  let delay = 350;
+  DIALOGUE.forEach(m => {
+    if (m.from === "bot") {
+      chatTimers.push(setTimeout(() => { aichatTyping.hidden = false; }, delay));
+      delay += 700 + Math.min(m.text.length * 8, 1200);
+      chatTimers.push(setTimeout(() => { aichatTyping.hidden = true; addMsg(m); }, delay));
+    } else {
+      chatTimers.push(setTimeout(() => addMsg(m), delay));
+    }
+    delay += 500;
+  });
+}
+
+let lastToggle = 0;
+agentToggle.addEventListener("click", () => {
+  const now = Date.now();
+  if (now - lastToggle < 450) return;
+  lastToggle = now;
+  const open = aichat.hidden;
+  aichat.hidden = !open;
+  agentToggle.setAttribute("aria-expanded", String(open));
+  if (open) { if (!chatPlayed) { playDialogue(); chatPlayed = true; } }
+  else { chatTimers.forEach(clearTimeout); aichatTyping.hidden = true; }
+});
+document.getElementById("aichat-close").addEventListener("click", () => {
+  aichat.hidden = true;
+  agentToggle.setAttribute("aria-expanded", "false");
+  chatTimers.forEach(clearTimeout);
+  aichatTyping.hidden = true;
+});
+document.getElementById("aichat-form").addEventListener("submit", e => e.preventDefault());
 </script>
 </body>
 </html>
