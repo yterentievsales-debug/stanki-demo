@@ -1,0 +1,8 @@
+{
+  "preamble": "Photographic realistic style. Ordinary natural Russian (Slavic) people, not models. Natural soft light, realistic skin, no glossy advertising look. No text, no logos, no watermark.",
+  "images": [
+    { "id": "agent", "raw": "raw/agent.png", "ar": "1:1", "ref": null, "preamble": false,
+      "scene": "Photographic head-and-shoulders portrait of a Russian man about 40 working as an industrial equipment sales manager at a machine tool factory, dark polo shirt under a casual grey blazer, calm friendly face with a slight smile, in a machine shop office with softly blurred machine tools behind him. Ordinary natural Russian (Slavic) appearance, not a model, no glossy advertising smile. Natural soft light, 50mm lens, realistic skin, face centered in the frame. No text, no logos, no watermark.",
+      "outputs": [ { "file": "assets/agent.webp", "width": 240, "quality": 80 } ] }
+  ]
+}
