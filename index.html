@@ -570,7 +570,7 @@ const aichat = document.getElementById("aichat");
 const aichatBody = document.getElementById("aichat-body");
 const aichatTyping = document.getElementById("aichat-typing");
 const agentToggle = document.getElementById("agent-toggle");
-let chatPlayed = false, chatTimers = [];
+let chatDone = false, chatTimers = [];
 
 function addMsg(m) {
   const el = document.createElement("div");
@@ -595,6 +595,7 @@ function playDialogue() {
     }
     delay += 500;
   });
+  chatTimers.push(setTimeout(() => { chatDone = true; }, delay));
 }
 
 let lastToggle = 0;
@@ -605,7 +606,7 @@ agentToggle.addEventListener("click", () => {
   const open = aichat.hidden;
   aichat.hidden = !open;
   agentToggle.setAttribute("aria-expanded", String(open));
-  if (open) { if (!chatPlayed) { playDialogue(); chatPlayed = true; } }
+  if (open) { if (!chatDone) playDialogue(); }
   else { chatTimers.forEach(clearTimeout); aichatTyping.hidden = true; }
 });
 document.getElementById("aichat-close").addEventListener("click", () => {
